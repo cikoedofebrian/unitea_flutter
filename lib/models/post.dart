@@ -2,13 +2,13 @@ class Post {
   final int id;
   final String title;
   final String content;
-  final int likes;
-  final int comments;
+  int likes;
+  int comments;
   final DateTime createdAt;
   final int senderId;
   final String senderName;
   final String facultyName;
-  final bool isliked;
+  bool isliked;
 
   Post({
     required this.id,
@@ -33,7 +33,7 @@ class Post {
         senderName: json['sender']['name'],
         senderId: json['sender']['id'],
         facultyName: json['faculty']['name'],
-        isliked: json["isliked"],
+        isliked: json["isliked"] ?? false,
       );
 
   // Map<String, dynamic> toJson() => {
