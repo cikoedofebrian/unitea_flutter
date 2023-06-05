@@ -19,12 +19,12 @@ class PostScreen extends StatelessWidget {
           backgroundColor: primary,
           expandedHeight: MediaQuery.of(context).size.height * 0.12,
           pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
+          flexibleSpace: const FlexibleSpaceBar(
             title: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Expanded(
                       child: Text(
                         'UniTea',

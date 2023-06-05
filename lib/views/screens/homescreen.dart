@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
 
     fetchData();
     return Scaffold(
+      backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(() => !postController.isLoading
           ? Container(

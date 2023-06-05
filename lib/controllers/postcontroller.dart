@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:unitea_flutter/constants/api.dart';
 import 'package:unitea_flutter/controllers/base.dart';
+import 'package:unitea_flutter/controllers/usercontroller.dart';
 import 'package:unitea_flutter/helper/apihelper.dart';
 import 'package:unitea_flutter/models/comment.dart';
 import 'package:unitea_flutter/models/faculty.dart';
 import 'package:unitea_flutter/models/post.dart';
+import '../helper/encryptor.dart';
 
 class PostController extends BaseController {
   final RxList<Post> _list = <Post>[].obs;
@@ -23,12 +25,17 @@ class PostController extends BaseController {
   }
 
   Future<void> fetchData() async {
-    _list.value = [];
-    final decodedResult = await ApiHelper.sendRequest(getPosts, "GET", null);
-    for (var i in decodedResult) {
-      _list.add(Post.fromJson(i));
+    try {
+      _list.value = [];
+      final decodedResult = await ApiHelper.sendRequest(getPosts, "GET", null);
+      for (var i in decodedResult) {
+        _list.add(Post.fromJson(i));
+      }
+      await fetchFaculty().then((value) => setLoading(false));
+    } catch (error) {
+      final UserController userController = Get.find();
+      userController.logout();
     }
-    await fetchFaculty().then((value) => setLoading(false));
   }
 
   Future<void> fetchFaculty() async {
@@ -60,10 +67,13 @@ class PostController extends BaseController {
     String content,
     int faculty,
   ) async {
+    final rsaEncrypted = Encryptor.shiftEncryptor(content);
+    final encryptedText = Encryptor.rsaEncryptor(rsaEncrypted);
+
     final decodedData = await ApiHelper.sendRequest(getPosts, "POST", {
       'title': title,
       'faculty_id': facultyList[faculty].id.toString(),
-      'content': content,
+      'content': encryptedText,
     });
 
     _list.add(Post.fromJson(decodedData['body']));

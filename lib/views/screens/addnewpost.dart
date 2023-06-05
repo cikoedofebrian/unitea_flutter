@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:math';
+import 'dart:convert';
 import 'package:unitea_flutter/constants/colors.dart';
 import 'package:unitea_flutter/controllers/postcontroller.dart';
 import 'package:unitea_flutter/views/widgets/customdialog.dart';
@@ -23,6 +25,36 @@ class _AddNewPostScreenState extends State<AddNewPostScreen> {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
     super.initState();
+  }
+
+  void tryParse() {
+    try {
+      BigInt n = BigInt.from(19829);
+      int l = (log(n.toDouble()) / log(2)).ceil();
+      BigInt e = BigInt.from(6911);
+      String plain = "Hello World";
+      List<int> plainBytes = utf8.encode(plain);
+      String cipherBinary = '';
+      for (int x in plainBytes) {
+        BigInt biX = BigInt.from(x);
+        BigInt biResult = biX.modPow(e, n);
+        cipherBinary += biResult.toRadixString(2).padLeft(l, '0');
+      }
+      while (cipherBinary.length % 8 > 0) {
+        cipherBinary += '0';
+      }
+      List<int> cipherBytes = [];
+      for (int i = 0; i < cipherBinary.length; i += 8) {
+        String tmp = cipherBinary.substring(i, i + 8);
+        int value = int.parse(tmp, radix: 2);
+        cipherBytes.add(value);
+      }
+
+      String cipherBase64 = base64.encode(cipherBytes);
+      print('Encrypted Message: $cipherBase64');
+    } catch (error) {
+      print(error);
+    }
   }
 
   @override
@@ -194,6 +226,7 @@ class _AddNewPostScreenState extends State<AddNewPostScreen> {
                           height: 15,
                         ),
                         InkWell(
+                          // onTap: trySave,
                           onTap: trySave,
                           child: Container(
                             decoration: BoxDecoration(
